@@ -8,3 +8,8 @@
   - `index.html`
   - `img` (images)
   - `js` (scripts)
+- `dist` (generate distribution from npm)
+
+## TODO before Dockerfile ready
+- `package.json`
+- `httpd.conf`
