@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 import imaplib
 import poplib
 
+from .email_tools import get_data_object_from_mail, get_mail_from_bytes
+
 
 class MailServer(ABC):
     @abstractmethod
@@ -39,22 +41,25 @@ class MailServerImap(MailServer):
 class MailServerPop(MailServer):
     def __init__(self, domain, port):
         self.server = poplib.POP3(domain, port)
+        self._tls = False
 
     def get_messages(self, user, password, delete=True):
+        if self._tls:
+            self.server.stls()
         self.server.user(user)
         self.server.pass_(password)
         n_messages = len(self.server.list()[1])
 
         for idx in range(n_messages):
-            getter = self.server.retr(idx + 1)
-            if next(getter) == b'+OK ':
-                yield next(getter)
+            response = self.server.retr(idx + 1)
+            status, bytes, size = response
+            if status == b'+OK ':
+                mail = get_mail_from_bytes(bytes)
+                #TODO: prometheus log recieved OK mail
+                yield get_data_object_from_mail(mail)
             else:
-                # TODO: Handle NOK
-                next(getter)
-
-            # This is just how much data we just got
-            next(getter)
+                #TODO: prometheus log recieved FAILED mail
+                pass
 
         if delete:
             for idx in range(n_messages):
@@ -62,8 +67,14 @@ class MailServerPop(MailServer):
 
         self.server.quit()
 
+    def use_tls(self):
+        self._tls = True
+
 
 def get_server(domain, port):
-    if port == 110:
-        return MailServerPop(domain, port)
+    if port in [110, 995]:
+        server = MailServerPop(domain, port)
+        if port == 995:
+            server.use_tls()
+        return server
     return MailServerImap(domain, port)
