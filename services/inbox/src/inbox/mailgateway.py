@@ -1,25 +1,30 @@
 from abc import ABC, abstractmethod
 import imaplib
 import poplib
+from typing import Iterator, Dict
 
 from .email_tools import get_data_object_from_mail, get_mail_from_bytes
 
 
 class MailServer(ABC):
     @abstractmethod
-    def __init__(self, domain, port):
+    def __init__(self, domain: str, port: int):
         pass
 
     @abstractmethod
-    def get_messages(self, user, password, delete=True):
+    def get_messages(
+        self, user: str, password: str, delete: bool = True
+    ) -> Iterator[Dict[str, str]]:
         pass
 
 
 class MailServerImap(MailServer):
-    def __init__(self, domain, port):
+    def __init__(self, domain: str, port: int):
         self.server = imaplib.IMAP4(domain, port)
 
-    def get_messages(self, user, password, delete=True):
+    def get_messages(
+        self, user: str, password: str, delete: bool = True,
+    ) -> Iterator[Dict[str, str]]:
         with self.server as connection:
             connection.login(user, password)
 
@@ -29,7 +34,10 @@ class MailServerImap(MailServer):
             # Return all messages
             _, inboxmsgs = connection.search(None, 'ALL')
             for num in inboxmsgs[0].split():
-                yield connection.fetch(num, '(RFC822)')
+                data = connection.fetch(num, '(RFC822)')
+                mail = get_mail_from_bytes(data)
+                #TODO: prometheus log recieved OK mail
+                yield get_data_object_from_mail(mail)
 
             # Delete all deleted mails
             if delete:
@@ -39,11 +47,13 @@ class MailServerImap(MailServer):
 
 
 class MailServerPop(MailServer):
-    def __init__(self, domain, port):
+    def __init__(self, domain: str, port: int):
         self.server = poplib.POP3(domain, port)
         self._tls = False
 
-    def get_messages(self, user, password, delete=True):
+    def get_messages(
+        self, user: str, password: str, delete: bool = True,
+    ) -> Iterator[Dict[str, str]]:
         if self._tls:
             self.server.stls()
         self.server.user(user)
@@ -52,9 +62,9 @@ class MailServerPop(MailServer):
 
         for idx in range(n_messages):
             response = self.server.retr(idx + 1)
-            status, bytes, size = response
+            status, data, size = response
             if status == b'+OK ':
-                mail = get_mail_from_bytes(bytes)
+                mail = get_mail_from_bytes(data)
                 #TODO: prometheus log recieved OK mail
                 yield get_data_object_from_mail(mail)
             else:
@@ -71,7 +81,7 @@ class MailServerPop(MailServer):
         self._tls = True
 
 
-def get_server(domain, port):
+def get_server(domain: str, port: int) -> MailServer:
     if port in [110, 995]:
         server = MailServerPop(domain, port)
         if port == 995:
