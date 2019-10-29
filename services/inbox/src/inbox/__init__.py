@@ -2,7 +2,7 @@ import os
 from .mailgateway import get_server
 
 host = os.environ.get("EUCO_MAIL_SERVER_HOST", "")  # Defaults to localhost
-port = os.environ.get("EUCO_MAIL_SERVER_PORT", 143)
+port = int(os.environ.get("EUCO_MAIL_SERVER_PORT", 143))
 user = os.environ.get("EUCO_MAIL_USER", "noone")
 password = os.environ.get("EUCO_MAIL_PWD", "nopwd")
 

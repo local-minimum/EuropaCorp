@@ -8,9 +8,7 @@ def get_mail_from_bytes(
     if isinstance(data, list):
         data = b'\n'.join(data)
 
-    parser = email.feedparser.BytesFeedParser()
-    parser.feed(data)
-    return parser.close()
+    return email.message_from_bytes(data)
 
 
 def get_data_object_from_mail(

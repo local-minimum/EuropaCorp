@@ -25,25 +25,26 @@ class MailServerImap(MailServer):
     def get_messages(
         self, user: str, password: str, delete: bool = True,
     ) -> Iterator[Dict[str, str]]:
-        with self.server as connection:
-            connection.login(user, password)
+        self.server.login(user, password)
 
-            # Go to INBOX
-            connection.select()
+        # Go to INBOX
+        self.server.select()
 
-            # Return all messages
-            _, inboxmsgs = connection.search(None, 'ALL')
+        # Return all messages
+        _, inboxmsgs = self.server.search(None, 'ALL')
+        for num in inboxmsgs[0].split():
+            _, data = self.server.fetch(num, '(RFC822)')
+            mail = get_mail_from_bytes(data)
+            # TODO: prometheus log recieved OK mail
+            yield get_data_object_from_mail(mail)
+
+        # Delete all deleted mails
+        if delete:
             for num in inboxmsgs[0].split():
-                data = connection.fetch(num, '(RFC822)')
-                mail = get_mail_from_bytes(data)
-                # TODO: prometheus log recieved OK mail
-                yield get_data_object_from_mail(mail)
-
-            # Delete all deleted mails
-            if delete:
-                for num in inboxmsgs[0].split():
-                    connection.store(num, '+FLAGS', '\\Deleted')
-                connection.expunge()
+                self.server.store(num, '+FLAGS', '\\Deleted')
+            self.server.expunge()
+        self.server.close()
+        self.server.logout()
 
 
 class MailServerPop(MailServer):
