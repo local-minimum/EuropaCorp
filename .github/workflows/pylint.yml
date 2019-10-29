@@ -1,7 +1,7 @@
 name: Python Lint
 
 on:
-  push:
+  pull:
     paths:
       - '*.py'
 
