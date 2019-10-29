@@ -1,6 +1,7 @@
 import email
 from typing import Union, List, Dict
 
+
 def get_mail_from_bytes(
     data: Union[List[bytes], bytes]
 ) -> email.message.EmailMessage:

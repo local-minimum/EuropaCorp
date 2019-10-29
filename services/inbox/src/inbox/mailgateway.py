@@ -36,7 +36,7 @@ class MailServerImap(MailServer):
             for num in inboxmsgs[0].split():
                 data = connection.fetch(num, '(RFC822)')
                 mail = get_mail_from_bytes(data)
-                #TODO: prometheus log recieved OK mail
+                # TODO: prometheus log recieved OK mail
                 yield get_data_object_from_mail(mail)
 
             # Delete all deleted mails
@@ -65,10 +65,10 @@ class MailServerPop(MailServer):
             status, data, size = response
             if status == b'+OK ':
                 mail = get_mail_from_bytes(data)
-                #TODO: prometheus log recieved OK mail
+                # TODO: prometheus log recieved OK mail
                 yield get_data_object_from_mail(mail)
             else:
-                #TODO: prometheus log recieved FAILED mail
+                # TODO: prometheus log recieved FAILED mail
                 pass
 
         if delete:
