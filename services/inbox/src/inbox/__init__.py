@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 from pymongo import MongoClient
 from pymongo.database import Database
@@ -12,6 +13,7 @@ USER = os.environ.get("EUCO_MAIL_USER", "noone")
 PASSWORD = os.environ.get("EUCO_MAIL_PWD", "nopwd")
 MONGO_URI = os.environ.get("EUCO_MONGO_URI", "mongodb://mongodb")
 MONGO_DB = os.environ.get("EUCO_MONGO_DB", "euco")
+HALF_HOUR = 30 * 60
 
 
 def get_db(uri: str, db: str) -> Database:
@@ -29,4 +31,6 @@ def process_mails(
 
 if __name__ == '__main__':
     db = get_db(MONGO_URI, MONGO_DB)
-    process_mails(HOST, PORT, USER, PASSWORD, db)
+    while True:
+        process_mails(HOST, PORT, USER, PASSWORD, db)
+        sleep(HALF_HOUR)
