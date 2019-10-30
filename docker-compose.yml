@@ -15,8 +15,6 @@ services:
     restart: "unless-stopped"
   webserver:
     build: services/webserver
-    environment:
-      - MONGODB_URI=mongodb://mongodb
     depends_on:
       -mongodb
     restart: "unless-stopped"
