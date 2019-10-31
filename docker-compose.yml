@@ -5,6 +5,10 @@ services:
     build: services/inbox
     environment:
       - MONGODB_URI=mongodb://mongodb
+      - EUCO_MAIL_SERVER_HOST=${EUCO_MAIL_SERVER_HOST}
+      - EUCO_MAIL_SERVER_PORT=${EUCO_MAIL_SERVER_PORT}
+      - EUCO_MAIL_USER=${EUCO_MAIL_USER}
+      - EUCO_MAIL_PWD=${EUCO_MAIL_PWD}
     depends_on:
       -mongodb
     restart: "unless-stopped"
