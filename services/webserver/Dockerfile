@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.6
 
 RUN ["pip", "install", "gunicorn"]
 COPY "requirements.txt" "/tmp/requirements.txt"
