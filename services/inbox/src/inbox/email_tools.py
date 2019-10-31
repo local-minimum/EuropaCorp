@@ -1,4 +1,5 @@
 from email.message import Message
+import email
 from typing import Union, List, Dict
 
 
