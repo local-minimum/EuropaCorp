@@ -1,6 +1,7 @@
 import os
 from time import sleep
 
+import prometheus_client as prometheus
 from pymongo import MongoClient
 from pymongo.database import Database
 
@@ -15,6 +16,10 @@ MONGO_URI = os.environ.get("EUCO_MONGO_URI", "mongodb://mongodb")
 MONGO_DB = os.environ.get("EUCO_MONGO_DB", "euco")
 HALF_HOUR = 30 * 60
 
+MAIL_COUNTER = prometheus.Counter(
+    'inbox_mails_processed',
+    'Number of mails received.'
+)
 
 def get_db(uri: str, db: str) -> Database:
     mongo_client = MongoClient(uri)
@@ -27,10 +32,12 @@ def process_mails(
     server = get_server(host, port)
     for mail in server.get_messages(user, password):
         insert_mail(db, mail)
+        MAIL_COUNTER.inc()
 
 
 if __name__ == '__main__':
     db = get_db(MONGO_URI, MONGO_DB)
+    prometheus.start_http_server(8000)
     while True:
         process_mails(HOST, PORT, USER, PASSWORD, db)
         sleep(HALF_HOUR)
