@@ -10,17 +10,17 @@ services:
       - EUCO_MAIL_USER=${EUCO_MAIL_USER}
       - EUCO_MAIL_PWD=${EUCO_MAIL_PWD}
     depends_on:
-      -mongodb
+      - mongodb
     restart: "unless-stopped"
   mongodb:
     image: mongo:3.4
     volumes:
-      -mongo-data:/data/db
+      - mongo-data:/data/db
     restart: "unless-stopped"
   webserver:
     build: services/webserver
     depends_on:
-      -mongodb
+      - mongodb
     restart: "unless-stopped"
 
 volumes:
