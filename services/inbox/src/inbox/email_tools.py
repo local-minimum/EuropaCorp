@@ -27,16 +27,16 @@ def mail_to_name(mail_str: str) -> str:
     return name
 
 
-def get_name_from(from_str: bytes) -> str:
-    match = re.match('[^<@]*', from_str)
+def get_name_from(from_str: str) -> str:
+    match = re.match(r'[^<@]*', from_str)
     if match:
         name = mail_to_name(match.group())
     if not name:
-        match = re.match('<([^@]*)', from_str)
+        match = re.match(r'<([^@]*)', from_str)
         if match:
             name = mail_to_name(match.groups()[0]).capitalize()
         else:
-            name = from_str.encode()
+            name = from_str
     return name
 
 
