@@ -1,6 +1,7 @@
 from email.message import Message
 import email
 from typing import Union, List, Dict
+import re
 
 
 def get_mail_from_bytes(
@@ -12,11 +13,31 @@ def get_mail_from_bytes(
     return email.message_from_bytes(data)
 
 
+def get_name_from(from_str: bytes) -> str:
+    match = re.match('[^<@]*', from_str)
+    if match:
+        if "." in match.group():
+            name = ' '.join([
+                part.capitalize().strip() for part in match.group().split('.')
+            ])
+        else:
+            name = match.group().strip()
+        if '_' in name:
+            name = ' '.join([
+                part.capitalize().strip() for part in match.group().split('_')
+            ])
+    else:
+        name = from_str.encode()
+    return name
+
+
 def get_data_object_from_mail(
     mail: Message
 ) -> Dict[str, str]:
+
     data = {
         'from': mail['From'],
+        'name': get_name_from(mail['From']),
         'to': mail['To'],
         'body': '',
     }
