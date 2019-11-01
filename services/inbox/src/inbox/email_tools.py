@@ -1,10 +1,11 @@
+from email.message import Message
 import email
 from typing import Union, List, Dict
 
 
 def get_mail_from_bytes(
     data: Union[List[bytes], bytes]
-) -> email.message.Message:
+) -> Message:
     if isinstance(data, list):
         data = b'\n'.join(data)
 
@@ -12,7 +13,7 @@ def get_mail_from_bytes(
 
 
 def get_data_object_from_mail(
-    mail: email.message.Message
+    mail: Message
 ) -> Dict[str, str]:
     data = {
         'from': mail['From'],

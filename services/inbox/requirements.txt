@@ -4,3 +4,4 @@
 #
 #    pip-compile
 #
+pymongo==3.9.0
