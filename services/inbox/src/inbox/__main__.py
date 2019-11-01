@@ -21,6 +21,7 @@ MAIL_COUNTER = prometheus.Counter(
     'Number of mails received.'
 )
 
+
 def get_db(uri: str, db: str) -> Database:
     mongo_client = MongoClient(uri)
     return mongo_client[db]
