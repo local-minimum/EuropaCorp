@@ -13,21 +13,30 @@ def get_mail_from_bytes(
     return email.message_from_bytes(data)
 
 
+def mail_to_name(mail_str: str) -> str:
+    if "." in mail_str:
+        name = ' '.join([
+            part.capitalize().strip() for part in mail_str.split('.')
+        ])
+    else:
+        name = mail_str.strip()
+    if '_' in name:
+        name = ' '.join([
+            part.capitalize().strip() for part in mail_str.split('_')
+        ])
+    return name
+
+
 def get_name_from(from_str: bytes) -> str:
     match = re.match('[^<@]*', from_str)
     if match:
-        if "." in match.group():
-            name = ' '.join([
-                part.capitalize().strip() for part in match.group().split('.')
-            ])
+        name = mail_to_name(match.group())
+    if not name:
+        match = re.match('<([^@]*)', from_str)
+        if match:
+            name = mail_to_name(match.groups()[0]).capitalize()
         else:
-            name = match.group().strip()
-        if '_' in name:
-            name = ' '.join([
-                part.capitalize().strip() for part in match.group().split('_')
-            ])
-    else:
-        name = from_str.encode()
+            name = from_str.encode()
     return name
 
 

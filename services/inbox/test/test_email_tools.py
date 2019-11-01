@@ -33,6 +33,7 @@ def test_get_data_object_from_mail(raw_mail):
     ('hello.me@test.com', 'Hello Me'),
     ('hello_me@test.com', 'Hello Me'),
     ('Hello Me    <why@space.com>', 'Hello Me'),
+    ('<why@space.com>', 'Why'),
 ))
 def test_name_from_email_only(raw_mail, fromline, expect):
     raw_mail[0] = "From: {}".format(fromline).encode()
