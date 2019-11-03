@@ -24,8 +24,8 @@ services:
     volumes:
       - mongo-data:/data/db
     restart: "unless-stopped"
-  webserver:
-    build: services/webserver
+  api:
+    build: services/api
     depends_on:
       - mongodb
     restart: "unless-stopped"
