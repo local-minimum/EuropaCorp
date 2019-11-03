@@ -1,5 +1,5 @@
 {
-  "name": "europa corp ui",
+  "name": "europacorp-ui",
   "version": "1.0.0",
   "description": "A react app",
   "main": "index.js",
@@ -16,6 +16,7 @@
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "babel-loader": "^8.0.6",
+    "prop-types": "^15.7.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }
