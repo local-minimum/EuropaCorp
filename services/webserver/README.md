@@ -1,3 +1,3 @@
-# About webserver
+# About api
 
-Python Flask backend server
+Python Flask api 
