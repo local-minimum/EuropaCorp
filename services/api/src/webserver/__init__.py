@@ -8,6 +8,8 @@ from prometheus_client import (
     Counter
 )
 
+BASEURI = "/api"
+
 
 app = create_app()
 app.config.update(**os.environ)
@@ -19,7 +21,7 @@ REQUEST_COUNTER = Counter(
 )
 
 
-@app.route("/metrics")
+@app.route(BASEURI + "/metrics")
 def metrics():
     registry = CollectorRegistry()
     multiprocess.MultiProcessCollector(registry)

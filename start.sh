@@ -1,9 +1,5 @@
-set -a
-source var/local/.euco.env
+#!/bin/bash -a
+source /var/local/.euco.env
 
-cd services/ui
-npm install
-npm run build
-
-cd ../..
+cd services/ui && npm install && npm run build
 docker-compose up --build -d
