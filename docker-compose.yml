@@ -1,6 +1,13 @@
 version: '3.3'
 
 services:
+  gateway:
+    ports:
+      - "8080:80"
+    image: httpd
+    restart: unless-stopped
+    volumes:
+      - ./services/gateway/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
   inbox:
     build: services/inbox
     environment:
@@ -17,10 +24,13 @@ services:
     volumes:
       - mongo-data:/data/db
     restart: "unless-stopped"
-  webserver:
-    build: services/webserver
+  api:
+    build: services/api
     depends_on:
       - mongodb
+    restart: "unless-stopped"
+  ui:
+    build: services/ui
     restart: "unless-stopped"
 
 volumes:
