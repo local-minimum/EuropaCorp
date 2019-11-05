@@ -40,13 +40,20 @@ def get_name_from(from_str: str) -> str:
     return name
 
 
+def get_mailer_from(from_str: str) -> str:
+    result = re.search(r'[^ <@]*@[^ >@]*\.[^ >@]{2,}', from_str)
+    if result:
+        return result.group()
+    return from_str
+
+
 def get_data_object_from_mail(
     mail: Message
 ) -> Dict[str, str]:
 
     data = {
-        'from': mail['From'],
         'name': get_name_from(mail['From']),
+        'mailer': get_mailer_from(mail['From']),
         'to': mail['To'],
         'body': '',
     }
