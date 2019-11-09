@@ -4,10 +4,9 @@
   * get mails without status
   * finds previous step of mailer
   * set status an email to the story piece id sent to the player
+  * store outgoing mail
 * storygateway
   * get a story piece
-* mailgateway
-  * send mail
 * game
   * resolve what's the next id
 * mailer
@@ -16,6 +15,7 @@
   * gets that piece with *storygateway*
   * finds out what next piece should be with *game*
   * gets that story piece with *storygateway*
-  * sends mail with *mailgateway*
+  * composes outgoing mail with deliverytime
+  * stores  outgoing mail with *mongogateway*
   * sets status on the incoming mail with *mongogateway*
   * sleeps for an some minutes
