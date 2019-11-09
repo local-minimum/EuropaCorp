@@ -15,7 +15,7 @@
   * gets that piece with *storygateway*
   * finds out what next piece should be with *game*
   * gets that story piece with *storygateway*
-  * composes outgoing mail with deliverytime
+  * all *game* stuff (composes outgoing mail with deliverytime)
   * stores  outgoing mail with *mongogateway*
   * sets status on the incoming mail with *mongogateway*
   * sleeps for an some minutes
