@@ -68,7 +68,7 @@ def has_unprocessed_response(db: Database, user: str):
     )
 
 
-def set_reponse(db: Database, response: Response):
+def set_response(db: Database, response: Response):
     db[RESPONSE].insert_one(response.to_document())
 
 

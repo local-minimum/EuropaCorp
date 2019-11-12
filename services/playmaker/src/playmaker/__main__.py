@@ -25,5 +25,5 @@ storygateway = StoryGateway(STORIES_PATH)
 prometheus.start_http_server(8000)
 
 while True:
-    process_communication(db, storygateway)
+    process_communications(db, storygateway)
     sleep(FIFTEEN_MINUTES)
