@@ -22,7 +22,7 @@ def test_get_mail_from_bytes(raw_mail):
 def test_get_data_object_from_mail(raw_mail):
     mail = email_tools.get_mail_from_bytes(raw_mail)
     assert email_tools.get_data_object_from_mail(mail) == {
-        'to': '<someone_else@example.com>',
+        'reciever': 'someone_else@example.com',
         'name': 'Foo Bar',
         'mailer': 'user@example.com',
         'body': 'Body would go here',

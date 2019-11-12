@@ -1,2 +1,4 @@
+attrs
 pymongo
+pyyaml
 prometheus_client

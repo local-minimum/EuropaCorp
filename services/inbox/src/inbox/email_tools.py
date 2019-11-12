@@ -40,7 +40,7 @@ def get_name_from(from_str: str) -> str:
     return name
 
 
-def get_mailer_from(from_str: str) -> str:
+def get_mail_from(from_str: str) -> str:
     result = re.search(r'[^ <@]*@[^ >@]*\.[^ >@]{2,}', from_str)
     if result:
         return result.group()
@@ -53,8 +53,8 @@ def get_data_object_from_mail(
 
     data = {
         'name': get_name_from(mail['From']),
-        'mailer': get_mailer_from(mail['From']),
-        'to': mail['To'],
+        'mailer': get_mail_from(mail['From']),
+        'reciever': get_mail_from(mail['To']),
         'body': '',
     }
     if mail.is_multipart():

@@ -1,34 +1,74 @@
+import datetime as dt
 from typing import List, Dict, Any, Optional, Iterable
 
+from pymongo import ASCENDING, DESCENDING, ObjectId
 from mongodb.database import Database
 
 from .models import Profile, Communication, Response
 
+MAILS = 'mails'
+PROFILES = 'profiles'
 
 def get_most_recent_storyid(db: Database, mailer: str) -> Optional[str]:
+    res = db[MAILS].find(
+        {
+            "processed_time": {"$exists": True},
+            "story_id": {"$exists": True},
+            "mailer": mailer,
+        },
+    ).sort(
+        {"processed_time": DESCENDING},
+    ).limit(1)
+    if res:
+        return res['story_id']
     return None
 
 
 def get_unprocessed_communications_per_user(
     db: Database,
 ) -> Iterable[List[Communication]]:
-    //TODO: Get the mails and stored interactions from the webpage
-    // should only yeild bundles that contain something
-    for _ in []:
-        yield []
+    mailers = set(
+        doc['mailer'] for doc in
+        db[MAILS].find({"processed_time": None}, {"_id": 0, "mailer": 1})
+    )
+    for mailer in mailers:
+        yield [
+            Communication.from_document(doc)
+            for doc in db[MAILS].find(
+                {"processed_time": None, "mailer": mailer}
+            ).sort(
+                'created_time', ASCENDING,
+            )
+        ]
 
 
 def get_user_profile(db: Database, user: str) -> Profile:
-    return {}
+    # Empty new profile for the user
+    document = db[PROFILES].find_one({"mailer": user})
+    if document:
+        Profile.from_document(document)
+    return Profile(mongodb_id=None, users=user)
 
 
 def update_profile(db: Database, profile: Profile):
-    pass
+    if profile.mongodb_id:
+        db[PROFILES].find_one_and_update(
+            {"_id": profile.mongodb_id},
+            {"$set": profile.to_document()},
+        )
+    else:
+        db[PROFILES].insert_one(profile.to_document())
 
 
 def set_reponse(db: Database, response: Response):
     pass
 
 
-def set_processed_communication(db: Database, idxs: List[ObjectId]):
-    pass
+def set_processed_communication(
+    db: Database, idxs: List[ObjectId], story_id: Optional[str] = None,
+):
+    processed_time = dt.datetime.utcnow()
+    db[MAILS].update(
+        {'_id': {"$in": idxs}},
+        {"$set": {"processed_time": processed_time, "story_id": story_id}},
+    )
