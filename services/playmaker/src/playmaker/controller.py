@@ -3,7 +3,7 @@ from mongodb.database import Database
 from .mongogateway import (
     get_unprocessed_communications_per_user, get_user_profile,
     get_most_recent_storyid, update_profile, set_reponse,
-    set_processed_communication,
+    set_processed_communication, has_unprocessed_response,
 )
 from .storygateway import StoryGateway
 from .game import get_next_storyid_and_profile, compose_response
@@ -31,9 +31,9 @@ def process_communication(mongodb: Database, storygateway: StoryGateway):
                 db, [communication.mongodb_id for communication in bundle],
             )
             continue
-        raise NotImplementedError(
-            "We need to check if we have scheduled respone",
-        )
+        if has_unprocessed_response(mailer) is False:
+            # TODO: Handle impatience?
+            continue
         profile = get_user_profile(mailer)
         recent_storyid = get_most_recent_storyid(mailer)
         story = storygateway.get_story(recent_storyid)

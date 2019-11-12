@@ -8,6 +8,8 @@ from .models import Profile, Communication, Response
 
 MAILS = 'mails'
 PROFILES = 'profiles'
+RESPONSE = 'response'
+
 
 def get_most_recent_storyid(db: Database, mailer: str) -> Optional[str]:
     res = db[MAILS].find(
@@ -43,7 +45,6 @@ def get_unprocessed_communications_per_user(
 
 
 def get_user_profile(db: Database, user: str) -> Profile:
-    # Empty new profile for the user
     document = db[PROFILES].find_one({"mailer": user})
     if document:
         Profile.from_document(document)
@@ -60,8 +61,15 @@ def update_profile(db: Database, profile: Profile):
         db[PROFILES].insert_one(profile.to_document())
 
 
+def has_unprocessed_response(db: Database, user: str):
+    return (
+        db[RESPONSE].find_one({"to": user, "sent": {"$exists": False}})
+        is not None
+    )
+
+
 def set_reponse(db: Database, response: Response):
-    pass
+    db[RESPONSE].insert_one(response.to_document())
 
 
 def set_processed_communication(

@@ -23,7 +23,7 @@ class Profile:
             mongodb_id=doc['_id'],
             mailer=doc['mailer'],
         )
-        
+
     def to_document(self):
         return {
             "mailer": self.mailer,
@@ -49,5 +49,15 @@ class Communication:
         )
 
 
+@attr.s
 class Reponse:
-    pass
+    to = attr.ib()
+    title = attr.ib()
+    body = attr.ib()
+
+    def to_document(self):
+        return {
+            "to": self.to,
+            "title": self.title,
+            "body": self.body,
+        }

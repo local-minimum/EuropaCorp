@@ -1,6 +1,6 @@
 from typing import Optional
 from pathlib import Path
-from yaml import load, dump
+from yaml import load, dump, YAMLError
 
 from .models import Story
 from .exceptions import StoryParsingError
