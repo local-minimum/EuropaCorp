@@ -39,7 +39,7 @@ def process_communication_bundle(
     )
     if next_storyid:
         next_story = storygateway.get_story(next_storyid)
-        repsonse = compose_response(mailer, next_story, profile)
+        response = compose_response(mailer, next_story, profile)
     else:
         # TODO: Fallback strategies, default responses from those mailed to
         response = None

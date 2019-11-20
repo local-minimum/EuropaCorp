@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import List, Dict, Any, Optional, Iterable
+from typing import List, Optional, Iterable
 
 from pymongo import ASCENDING, DESCENDING, ObjectId
 from mongodb.database import Database

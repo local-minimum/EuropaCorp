@@ -62,7 +62,7 @@ class TestGetEvolvedProfile:
     def test_keeps_name(self):
         profile = models.Profile(mailer="me@me.me", name="Dot")
         bundle = [mkcommunication(name="I am Name")]
-        assert game.get_evolved_profile(bundle, profile) == models.Profile( 
+        assert game.get_evolved_profile(bundle, profile) == models.Profile(
             name="Dot",
             mailer="me@me.me",
         )

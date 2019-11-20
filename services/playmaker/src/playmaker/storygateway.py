@@ -1,6 +1,6 @@
 from typing import Optional
 from pathlib import Path
-from yaml import load, dump, YAMLError
+from yaml import load, YAMLError
 
 from .dsl.tools import build_rule
 from .models import Story
