@@ -42,4 +42,4 @@ def build_rule(data: Optional[Dict[str, Any]]) -> Rule:
 
 
 def should_execute(link: Link, comm: Communication) -> bool:
-    return link(comm) >= link.execute_threshold
+    return link.rule(comm) >= link.execute_threshold

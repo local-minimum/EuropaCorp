@@ -7,22 +7,23 @@ class Zero(Rule):
 
 
 class MailedTo(Rule):
-    def __init__(self, reciever: str, success: float = 1, fail: float = 1):
+    def __init__(self, reciever: str, success: float = 1, fail: float = 0):
         self.reciever = reciever
         self.success = success
         self.fail = fail
 
     def __call__(self, comm: Communication):
         return (
-            self.success if comm.reciever == self.reciever else self.self.fail
+            self.success if comm.reciever == self.reciever else self.fail
         )
 
 
 class BodyContains(Rule):
     def __init__(self, *phrases: str):
         self.phrases = phrases
+
     def __call__(self, comm: Communication):
-        return len(phrase for phrase in bundle if phrase in comm.body)
+        return len([phrase for phrase in self.phrases if phrase in comm.body])
 
 
 class Sum(Rule):
@@ -55,4 +56,4 @@ class Threshold(Rule):
         self.rule = rule
 
     def __call__(self, comm: Communication):
-        return self.success if self.rule(comm) >= self.threshold else self.self.fail
+        return self.success if self.rule(comm) >= self.threshold else self.fail
