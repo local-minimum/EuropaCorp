@@ -22,7 +22,7 @@ def get_db(uri: str, db: str) -> Database:
 
 
 db = get_db(MONGO_URI, MONGO_DB)
-storygateway = StoryGateway(Path(STORIES_PATH   ))
+storygateway = StoryGateway(Path(STORIES_PATH))
 prometheus.start_http_server(8000)
 
 while True:
