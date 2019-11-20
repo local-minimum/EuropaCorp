@@ -4,3 +4,7 @@ class UnknownMailerError(Exception):
 
 class StoryParsingError(Exception):
     pass
+
+
+class DSLParsingError(StoryParsingError):
+    pass

@@ -2,6 +2,7 @@ from typing import Dict, Any, Optional, List
 
 from . import language as lang
 from ..models import Link, Communication, Rule
+from ..exceptions import DSLParsingError
 
 
 def get_supplied_optionals(
@@ -39,6 +40,7 @@ def build_rule(data: Optional[Dict[str, Any]]) -> Rule:
             lang.BodyContains(*data['options']),
             **get_supplied_optionals(data, ['success', 'fail'])
         )
+    raise DSLParsingError("Rule {} not understood".format(rule))
 
 
 def should_execute(link: Link, comm: Communication) -> bool:

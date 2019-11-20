@@ -48,7 +48,7 @@ def get_user_profile(db: Database, user: str) -> Profile:
     document = db[PROFILES].find_one({"mailer": user})
     if document:
         Profile.from_document(document)
-    return Profile(mongodb_id=None, users=user)
+    return Profile(mongodb_id=None, mailer=user)
 
 
 def update_profile(db: Database, profile: Profile):
