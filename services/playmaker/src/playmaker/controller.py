@@ -27,8 +27,8 @@ def process_communication_bundle(
     db: Database, storygateway: StoryGateway, bundle: List[Communication],
     mailer: str,
 ):
-    profile = get_user_profile(mailer)
-    recent_storyid = get_most_recent_storyid(mailer)
+    profile = get_user_profile(db, mailer)
+    recent_storyid = get_most_recent_storyid(db, mailer)
     story = storygateway.get_story(recent_storyid)
     if story is None:
         # TODO: waiting for more content / monitor this
@@ -51,7 +51,7 @@ def process_communication_bundle(
             [communication.mongodb_id for communication in bundle],
             next_storyid,
         )
-    update_profile(profile)
+    update_profile(db, profile)
 
 
 def process_communications(db: Database, storygateway: StoryGateway):
@@ -64,7 +64,7 @@ def process_communications(db: Database, storygateway: StoryGateway):
                 db, [communication.mongodb_id for communication in bundle],
             )
             continue
-        if has_unprocessed_response(mailer) is False:
+        if has_unprocessed_response(db, mailer) is False:
             # TODO: Handle impatience?
             continue
         process_communication_bundle(db, storygateway, bundle, mailer)

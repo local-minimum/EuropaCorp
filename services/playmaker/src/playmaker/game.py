@@ -20,7 +20,7 @@ def get_evolved_profile(
 
 def get_next_storyid_and_profile(
     bundle: List[Communication], story: Story, profile: Profile,
-) -> Tuple[Optional[str], Dict[str, Any]]:
+) -> Tuple[Optional[str], Profile]:
     return None, get_evolved_profile(bundle, profile)
 
 
@@ -36,8 +36,10 @@ def format_response(text: str, profile: Profile) -> str:
 
 
 def compose_response(
-    mailer: str, next_story: Story, profile: Profile,
-) -> Response:
+    mailer: str, next_story: Optional[Story], profile: Profile,
+) -> Optional[Response]:
+    if not next_story:
+        return None
     return Response(
         to=mailer,
         title=format_response(next_story.title, profile),

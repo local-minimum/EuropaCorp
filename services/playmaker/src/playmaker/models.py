@@ -75,7 +75,7 @@ class Profile:
 
     @classmethod
     def from_document(cls, doc: Cursor) -> "Profile":
-        cls(
+        return cls(
             mongodb_id=doc['_id'],
             mailer=doc['mailer'],
             name=doc['name'],

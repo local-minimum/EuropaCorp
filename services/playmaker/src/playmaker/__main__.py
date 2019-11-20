@@ -1,5 +1,6 @@
 import os
 from time import sleep
+from pathlib import Path
 
 import prometheus_client as prometheus
 from pymongo import MongoClient
@@ -21,9 +22,9 @@ def get_db(uri: str, db: str) -> Database:
 
 
 db = get_db(MONGO_URI, MONGO_DB)
-storygateway = StoryGateway(STORIES_PATH)
+storygateway = StoryGateway(Path(STORIES_PATH   ))
 prometheus.start_http_server(8000)
 
 while True:
-    process_communication_bundle(db, storygateway)
+    process_communications(db, storygateway)
     sleep(FIFTEEN_MINUTES)
