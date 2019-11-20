@@ -6,7 +6,7 @@ import prometheus_client as prometheus
 from pymongo import MongoClient
 from pymongo.database import Database
 
-from .controller import process_communication_bundle
+from .controller import process_communications
 from .storygateway import StoryGateway
 
 MONGO_URI = os.environ.get("EUCO_MONGO_URI", "mongodb://mongodb")
