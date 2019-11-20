@@ -1,3 +1,5 @@
+from typing import List
+
 from mongodb.database import Database
 
 from .mongogateway import (
@@ -30,7 +32,7 @@ def process_communication_bundle(
     story = storygateway.get_story(recent_storyid)
     if story is None:
         # TODO: waiting for more content / monitor this
-        continue
+        return
     # TODO: monitor progress by id (not user)
     next_storyid, profile = get_next_storyid_and_profile(
         bundle, story, profile,

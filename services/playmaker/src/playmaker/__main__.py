@@ -5,7 +5,7 @@ import prometheus_client as prometheus
 from pymongo import MongoClient
 from pymongo.database import Database
 
-from .controller import process_communication
+from .controller import process_communication_bundle
 from .storygateway import StoryGateway
 
 MONGO_URI = os.environ.get("EUCO_MONGO_URI", "mongodb://mongodb")
@@ -25,5 +25,5 @@ storygateway = StoryGateway(STORIES_PATH)
 prometheus.start_http_server(8000)
 
 while True:
-    process_communications(db, storygateway)
+    process_communication_bundle(db, storygateway)
     sleep(FIFTEEN_MINUTES)
