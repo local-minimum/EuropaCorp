@@ -2,6 +2,7 @@ from typing import Optional
 from pathlib import Path
 from yaml import load, dump, YAMLError
 
+from .dsl.tools import build_rule
 from .models import Story
 from .exceptions import StoryParsingError
 
@@ -17,14 +18,17 @@ class StoryGateway:
         try:
             with open(path) as fs:
                 data = load(fs)
-        except IOError:
+        except IOError as e:
+            print("ioerror {}".format(e))
             return None
-        except YAMLError:
+        except YAMLError as e:
             # TODO: Do some monitoring
+            print('YAMLError {}'.format(e))
             return None
         try:
-            return Story.from_data(data)
-        except StoryParsingError:
+            return Story.from_data(data, build_rule)
+        except StoryParsingError as e:
             # TODO: Do some monitoring
+            print('Parsing Error: {}'.format(e))
             pass
         return None
