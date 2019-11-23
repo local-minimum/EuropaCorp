@@ -11,7 +11,7 @@ from .storygateway import StoryGateway
 
 MONGO_URI = os.environ.get("EUCO_MONGO_URI", "mongodb://mongodb")
 MONGO_DB = os.environ.get("EUCO_MONGO_DB", "euco")
-STORIES_PATH = os.environ.get("EUCO_STORIES_PATH", "/var/euco/stories")
+STORIES_PATH = os.environ.get("EUCO_STORIES_PATH", "/app/stories")
 
 FIFTEEN_MINUTES = 15 * 60
 

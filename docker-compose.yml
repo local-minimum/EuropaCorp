@@ -8,6 +8,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./services/gateway/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+
   inbox:
     build: services/inbox
     environment:
@@ -18,16 +19,25 @@ services:
     depends_on:
       - mongodb
     restart: "unless-stopped"
+
+  playmaker:
+    build: services/playmaker
+    depends_on:
+      - mongodb
+    restart: "unless-stopped"
+
   mongodb:
     image: mongo:3.4
     volumes:
       - mongo-data:/data/db
     restart: "unless-stopped"
+
   api:
     build: services/api
     depends_on:
       - mongodb
     restart: "unless-stopped"
+
   ui:
     build: services/ui
     restart: "unless-stopped"
