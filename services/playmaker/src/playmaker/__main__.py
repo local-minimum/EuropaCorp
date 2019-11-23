@@ -21,6 +21,12 @@ COMMUNICATIONS_COUNTER = prometheus.Counter(
     ['story_id', 'status', 'type']
 )
 
+STORYGATEWAY_ERRORCOUNTER = prometheus.Counter(
+    'gamemaker_stories_total',
+    'Number of communications processed by Gamemaker',
+    ['story_id', 'status']
+)
+
 
 def get_db(uri: str, db: str) -> Database:
     mongo_client = MongoClient(uri)
@@ -28,7 +34,7 @@ def get_db(uri: str, db: str) -> Database:
 
 
 db = get_db(MONGO_URI, MONGO_DB)
-storygateway = StoryGateway(Path(STORIES_PATH))
+storygateway = StoryGateway(Path(STORIES_PATH), STORYGATEWAY_ERRORCOUNTER)
 prometheus.start_http_server(8000)
 
 while True:

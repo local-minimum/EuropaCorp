@@ -1,0 +1,33 @@
+title: Some old text
+sender: happy@example.com
+links:
+  - story: next_piece
+    threshold: 4
+    rule:
+      rule: SUM
+      rules:
+        - rule: MAILEDTO
+          reciever: happy@example.com
+          success: 2
+        - rule: BODYCONTAINS
+          contains:
+            - apples
+            - oranges
+            - bananas
+  - story: other_piece
+    threshold: 2
+    rule:
+      rule: SUM
+      rules:
+        - rule: BODYMENTIONS
+          options:
+            - figs
+            - pizzas
+        - rule: BODYMENTIONS
+          threshold: 2
+          options:
+            - yellow
+            - green
+            - gold
+  - story: default_piece
+    threshold: 0
