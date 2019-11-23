@@ -6,7 +6,7 @@ from .mongogateway import (
     get_unprocessed_communications_per_user, get_user_profile,
     get_most_recent_storyid, update_profile, set_response,
     set_processed_communication, has_unprocessed_response,
-    set_story_not_found_time,
+    set_not_processed,
 )
 from .storygateway import StoryGateway
 from .game import get_next_storyid_and_profile, compose_response
@@ -31,12 +31,10 @@ def process_communication_bundle(
     profile = get_user_profile(db, mailer)
     recent_storyid = get_most_recent_storyid(db, mailer)
     story = storygateway.get_story(recent_storyid)
+    idxs = [communication.mongodb_id for communication in bundle]
     if story is None:
         # TODO: monitor this
-        set_story_not_found_time(
-            db,
-            [communication.mongodb_id for communication in bundle],
-        )
+        set_not_processed(db, idxs)
         return
     # TODO: monitor progress by id (not user)
     next_storyid, profile = get_next_storyid_and_profile(
@@ -46,7 +44,8 @@ def process_communication_bundle(
         next_story = storygateway.get_story(next_storyid)
         response = compose_response(mailer, next_story, profile)
     else:
-        # TODO: Fallback strategies, default responses from those mailed to
+        # TODO: monitor
+        set_not_processed(db, idxs)
         response = None
 
     if response:
@@ -70,6 +69,6 @@ def process_communications(db: Database, storygateway: StoryGateway):
             )
             continue
         if has_unprocessed_response(db, mailer) is False:
-            # TODO: Handle impatience?
+            # TODO: Monitor
             continue
         process_communication_bundle(db, storygateway, bundle, mailer)

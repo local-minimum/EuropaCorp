@@ -52,7 +52,7 @@ def get_unprocessed_communications_per_user(
         ]
 
 
-def set_story_not_found_time(db: Database, idxs: List[ObjectId]):
+def set_not_processed(db: Database, idxs: List[ObjectId]):
     not_found_time = dt.datetime.utcnow()
     db[MAILS].update(
         {'_id': {"$in": idxs}},
