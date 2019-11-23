@@ -16,7 +16,12 @@ def build_rule(data: Optional[Dict[str, Any]]) -> Rule:
     if data is None:
         return lang.Zero()
 
-    rule = data['rule'].upper().replace("_", "")
+    try:
+        rule = data['rule'].upper().replace("_", "")
+    except TypeError:
+        raise DSLParsingError("Rule expected to be a dictionary but was {}".format(
+            type(data),
+        ))
     if rule == 'MAILEDTO':
         return lang.MailedTo(
             data['reciever'],

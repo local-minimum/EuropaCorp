@@ -1,0 +1,22 @@
+title: Meatbag of human! Welcome new friend/customer
+sender: sales@euco.com
+body: |
+  Human {{ profile.name }},
+
+  we are most esteamed to see your entry into
+  our pyramid scheme/safe investment and hope
+  for many orbits in your company.
+
+  Please inform me personally samantha.john@euco.com
+  you are happy/future with us accepts.
+
+  Best Regards,
+
+  Master Salesrep 1st degree
+  Samantha John
+links:
+  - story: samantha_1
+    threshold: 1
+    rule:
+      rule: MAILEDTO
+      reciever: samantha.john@euco.com

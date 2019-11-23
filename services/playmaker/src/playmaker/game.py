@@ -5,6 +5,7 @@ import re
 from attr import evolve
 
 from .models import Profile, Story, Communication, Response
+from .dsl.tools import should_execute
 
 
 def get_evolved_profile(
@@ -21,6 +22,10 @@ def get_evolved_profile(
 def get_next_storyid_and_profile(
     bundle: List[Communication], story: Story, profile: Profile,
 ) -> Tuple[Optional[str], Profile]:
+    for communication in bundle:
+        for link in story.links:
+            if should_execute(link, communication):
+                return link.story_id, get_evolved_profile(bundle, profile)
     return None, get_evolved_profile(bundle, profile)
 
 
