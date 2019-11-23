@@ -78,7 +78,7 @@ def update_profile(db: Database, profile: Profile):
         db[PROFILES].insert_one(profile.to_document())
 
 
-def has_unprocessed_response(db: Database, user: str):
+def has_unprocessed_response(db: Database, user: str) -> bool:
     return (
         db[RESPONSE].find_one({"to": user, "sent": {"$exists": False}})
         is not None

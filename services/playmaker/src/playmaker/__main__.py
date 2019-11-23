@@ -15,6 +15,12 @@ STORIES_PATH = os.environ.get("EUCO_STORIES_PATH", "/var/euco/stories")
 
 FIFTEEN_MINUTES = 15 * 60
 
+COMMUNICATIONS_COUNTER = prometheus.Counter(
+    'gamemaker_communications_total',
+    'Number of communications processed by Gamemaker',
+    ['story_id', 'status', 'type']
+)
+
 
 def get_db(uri: str, db: str) -> Database:
     mongo_client = MongoClient(uri)
@@ -26,5 +32,5 @@ storygateway = StoryGateway(Path(STORIES_PATH))
 prometheus.start_http_server(8000)
 
 while True:
-    process_communications(db, storygateway)
+    process_communications(db, storygateway, COMMUNICATIONS_COUNTER)
     sleep(FIFTEEN_MINUTES)
