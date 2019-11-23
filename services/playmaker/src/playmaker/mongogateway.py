@@ -53,10 +53,11 @@ def get_user_profile(db: Database, user: str) -> Profile:
 
 def update_profile(db: Database, profile: Profile):
     if profile.mongodb_id:
-        db[PROFILES].find_one_and_update(
-            {"_id": profile.mongodb_id},
-            {"$set": profile.to_document()},
-        )
+        if profile.evolved:
+            db[PROFILES].find_one_and_update(
+                {"_id": profile.mongodb_id},
+                {"$set": profile.to_document()},
+            )
     else:
         db[PROFILES].insert_one(profile.to_document())
 

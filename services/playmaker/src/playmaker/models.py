@@ -72,6 +72,7 @@ class Profile:
     mailer = attr.ib()
     mongodb_id = attr.ib(default=None)
     name = attr.ib(default=None)
+    evolved = attr.ib(default=False)
 
     @classmethod
     def from_document(cls, doc: Cursor) -> "Profile":

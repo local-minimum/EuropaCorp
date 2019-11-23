@@ -46,6 +46,7 @@ class TestGetEvolvedProfile:
         assert game.get_evolved_profile(bundle, profile) == models.Profile(
             name="I am Name",
             mailer="me@me.me",
+            evolved=True,
         )
 
     def test_updates_name_if_probable(self):
@@ -57,6 +58,7 @@ class TestGetEvolvedProfile:
         assert game.get_evolved_profile(bundle, profile) == models.Profile(
             name="I am Name",
             mailer="me@me.me",
+            evolved=True,
         )
 
     def test_keeps_name(self):
@@ -65,4 +67,5 @@ class TestGetEvolvedProfile:
         assert game.get_evolved_profile(bundle, profile) == models.Profile(
             name="Dot",
             mailer="me@me.me",
+            evolved=False,
         )

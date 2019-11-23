@@ -14,7 +14,7 @@ def get_evolved_profile(
     if names:
         name, count = names.most_common(1)[0]
         if count > 1 or not profile.name:
-            profile = evolve(profile, name=name)
+            profile = evolve(profile, name=name, evolved=True)
     return profile
 
 
