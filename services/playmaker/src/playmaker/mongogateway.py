@@ -29,19 +29,35 @@ def get_most_recent_storyid(db: Database, mailer: str) -> Optional[str]:
 def get_unprocessed_communications_per_user(
     db: Database,
 ) -> Iterable[List[Communication]]:
+    retry_threshold = dt.datetime.utcnow() - dt.timedelta(days=3)
+    inclusion_filter = {"$and": [
+        {"processed_time": None},
+        {"$or": [
+            {"not_found_time": {"$exists": False}},
+            {"not_found_time": {"$gt": retry_threshold}},
+        ]},
+    ]}
     mailers = set(
         doc['mailer'] for doc in
-        db[MAILS].find({"processed_time": None}, {"_id": 0, "mailer": 1})
+        db[MAILS].find(inclusion_filter, {"_id": 0, "mailer": 1})
     )
     for mailer in mailers:
         yield [
             Communication.from_document(doc)
             for doc in db[MAILS].find(
-                {"processed_time": None, "mailer": mailer}
+                {"$and": [inclusion_filter, {"mailer": mailer}]}
             ).sort(
                 'created_time', ASCENDING,
             )
         ]
+
+
+def set_story_not_found_time(db: Database, idxs: List[ObjectId]):
+    not_found_time = dt.datetime.utcnow()
+    db[MAILS].update(
+        {'_id': {"$in": idxs}},
+        {"$set": {"not_found_time": not_found_time}},
+    )
 
 
 def get_user_profile(db: Database, user: str) -> Profile:

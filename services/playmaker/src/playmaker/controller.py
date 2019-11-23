@@ -6,6 +6,7 @@ from .mongogateway import (
     get_unprocessed_communications_per_user, get_user_profile,
     get_most_recent_storyid, update_profile, set_response,
     set_processed_communication, has_unprocessed_response,
+    set_story_not_found_time,
 )
 from .storygateway import StoryGateway
 from .game import get_next_storyid_and_profile, compose_response
@@ -31,7 +32,11 @@ def process_communication_bundle(
     recent_storyid = get_most_recent_storyid(db, mailer)
     story = storygateway.get_story(recent_storyid)
     if story is None:
-        # TODO: waiting for more content / monitor this
+        # TODO: monitor this
+        set_story_not_found_time(
+            db,
+            [communication.mongodb_id for communication in bundle],
+        )
         return
     # TODO: monitor progress by id (not user)
     next_storyid, profile = get_next_storyid_and_profile(
