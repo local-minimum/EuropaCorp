@@ -4,6 +4,7 @@ import poplib
 from typing import Iterator, Dict
 
 from .email_tools import get_data_object_from_mail, get_mail_from_bytes
+from .exceptions import UnhandledEmailStructure
 
 
 class MailServer(ABC):
@@ -36,7 +37,12 @@ class MailServerImap(MailServer):
             _, data = self.server.fetch(num, '(RFC822)')
             mail = get_mail_from_bytes(data)
             # TODO: prometheus log recieved OK mail
-            yield get_data_object_from_mail(mail)
+            try:
+                maildata = get_data_object_from_mail(mail)
+            except UnhandledEmailStructure:
+                pass
+            else:
+                yield maildata
 
         # Delete all deleted mails
         if delete:

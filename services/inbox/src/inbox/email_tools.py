@@ -3,6 +3,8 @@ import email
 from typing import Union, List, Dict
 import re
 
+from .exceptions import UnhandledEmailStructure
+
 
 def get_mail_from_bytes(
     data: Union[List[bytes], bytes]
@@ -47,6 +49,16 @@ def get_mail_from(from_str: str) -> str:
     return from_str
 
 
+def body_to_string(
+    body: Union[List[Message], str, bytes, None],
+) -> str:
+    if isinstance(body, bytes):
+        return body.decode()
+    elif isinstance(body, str):
+        return body
+    raise UnhandledEmailStructure()
+
+
 def get_data_object_from_mail(
     mail: Message
 ) -> Dict[str, str]:
@@ -62,10 +74,8 @@ def get_data_object_from_mail(
             ctype = part.get_content_type()
             cdispo = str(part.get('Content-Disposition'))
             if ctype == 'text/plain' and 'attachment' not in cdispo:
-                data['body'] = part.get_payload(decode=True).decode()
+                data['body'] = body_to_string(mail.get_payload(decode=True))
                 break
     else:
-        data['body'] = mail.get_payload(decode=True).decode()
-    if isinstance(data['body'], bytes):
-        data['body'] = data['body'].decode()
+        data['body'] = body_to_string(mail.get_payload(decode=True))
     return data
