@@ -22,9 +22,9 @@ def test_get_mail_from_bytes(raw_mail):
 def test_get_data_object_from_mail(raw_mail):
     mail = email_tools.get_mail_from_bytes(raw_mail)
     assert email_tools.get_data_object_from_mail(mail) == {
-        'from': 'Foo Bar <user@example.com>',
-        'to': '<someone_else@example.com>',
+        'reciever': 'someone_else@example.com',
         'name': 'Foo Bar',
+        'mailer': 'user@example.com',
         'body': 'Body would go here',
     }
 
@@ -39,3 +39,15 @@ def test_name_from_email_only(raw_mail, fromline, expect):
     raw_mail[0] = "From: {}".format(fromline).encode()
     mail = email_tools.get_mail_from_bytes(raw_mail)
     assert email_tools.get_data_object_from_mail(mail)['name'] == expect
+
+
+@pytest.mark.parametrize('fromline,expect', (
+    ('hello.me@test.com', 'hello.me@test.com'),
+    ('hello_me@test.com', 'hello_me@test.com'),
+    ('Hello Me    <why@space.com>', 'why@space.com'),
+    ('<why@space.com>', 'why@space.com'),
+))
+def test_mailer_from_email_only(raw_mail, fromline, expect):
+    raw_mail[0] = "From: {}".format(fromline).encode()
+    mail = email_tools.get_mail_from_bytes(raw_mail)
+    assert email_tools.get_data_object_from_mail(mail)['mailer'] == expect
